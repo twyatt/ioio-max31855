@@ -99,12 +99,12 @@ public class MAX31855 implements IOIOLooper {
 		
 		int internal = (int) ((data >> 4) & LSB_11);
 		if ((data & INTERNAL_SIGN_BIT) == INTERNAL_SIGN_BIT) {
-			internal *= -1;
+			internal = -(~internal & LSB_11);
 		}
 		
 		int thermocouple = (int) ((data >> 18) & LSB_13);
 		if ((data & THERMOCOUPLE_SIGN_BIT) == THERMOCOUPLE_SIGN_BIT) {
-			thermocouple *= -1;
+			thermocouple = -(~thermocouple & LSB_13);
 		}
 		
 		this.internal = internal * 0.0625f;
