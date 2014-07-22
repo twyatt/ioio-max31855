@@ -1,1 +1,1 @@
-![Screenshot](blob/master/screenshot.jpg)
+![Screenshot](screenshot.jpg)
