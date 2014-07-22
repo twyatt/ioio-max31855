@@ -1,9 +1,9 @@
 package com.traviswyatt.ioio.max31855;
 
-import ioio.lib.api.IOIO;
 import ioio.lib.api.SpiMaster;
 import ioio.lib.api.SpiMaster.Rate;
 import ioio.lib.api.exception.ConnectionLostException;
+import ioio.lib.util.BaseIOIOLooper;
 import ioio.lib.util.IOIOLooper;
 import ioio.lib.util.android.IOIOActivity;
 
@@ -112,7 +112,7 @@ public class MainActivity extends IOIOActivity {
 	 * been established (which might happen several times!). Then, loop() will
 	 * be called repetitively until the IOIO gets disconnected.
 	 */
-	class DeviceLooper implements IOIOLooper {
+	class DeviceLooper extends BaseIOIOLooper {
 		
 		private IOIOLooper device;
 
@@ -121,24 +121,14 @@ public class MainActivity extends IOIOActivity {
 		}
 		
 		@Override
-		public void setup(IOIO ioio) throws ConnectionLostException, InterruptedException {
-			device.setup(ioio);
+		public void setup() throws ConnectionLostException, InterruptedException {
+			device.setup(ioio_);
 			updateTextView(ioioStatusText, "IOIO Connected");
 		}
 
-		/**
-		 * Called repetitively while the IOIO is connected.
-		 * 
-		 * @throws ConnectionLostException
-		 *             When IOIO connection is lost.
-		 * @throws InterruptedException 
-		 * 
-		 * @see ioio.lib.util.AbstractIOIOActivity.IOIOThread#loop()
-		 */
 		@Override
 		public void loop() throws ConnectionLostException, InterruptedException {
 			device.loop();
-			Thread.sleep(10L);
 		}
 
 		@Override
@@ -149,9 +139,9 @@ public class MainActivity extends IOIOActivity {
 
 		@Override
 		public void incompatible() {
-			device.incompatible();
 			updateTextView(ioioStatusText, "IOIO Incompatible");
 		}
+		
 	}
 
 }

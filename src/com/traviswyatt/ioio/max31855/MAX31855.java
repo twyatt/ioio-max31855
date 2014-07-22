@@ -2,13 +2,12 @@ package com.traviswyatt.ioio.max31855;
 
 import ioio.lib.api.DigitalInput;
 import ioio.lib.api.DigitalOutput;
-import ioio.lib.api.IOIO;
 import ioio.lib.api.SpiMaster;
 import ioio.lib.api.SpiMaster.Rate;
 import ioio.lib.api.exception.ConnectionLostException;
-import ioio.lib.util.IOIOLooper;
+import ioio.lib.util.BaseIOIOLooper;
 
-public class MAX31855 implements IOIOLooper {
+public class MAX31855 extends BaseIOIOLooper {
 	
 	private static final int READ_BUFFER_SIZE = 4; // bytes
 	
@@ -72,15 +71,15 @@ public class MAX31855 implements IOIOLooper {
 	}
 	
 	/*
-	 * IOIOLooper interface methods.
+	 * BaseIOIOLooper methods.
 	 */
 
 	@Override
-	public void setup(IOIO ioio) throws ConnectionLostException, InterruptedException {
+	public void setup() throws ConnectionLostException, InterruptedException {
 		boolean invertClk = false;
 		boolean sampleOnTrailing = false;
 		SpiMaster.Config config = new SpiMaster.Config(rate, invertClk, sampleOnTrailing);
-		spi = ioio.openSpiMaster(miso, mosi, clk, slaveSelect, config);
+		spi = ioio_.openSpiMaster(miso, mosi, clk, slaveSelect, config);
 	}
 
 	@Override
@@ -113,16 +112,6 @@ public class MAX31855 implements IOIOLooper {
 		if (listener != null) {
 			listener.onData(this.internal, this.thermocouple);
 		}
-	}
-
-	@Override
-	public void disconnected() {
-		// TODO Auto-generated method stub
-	}
-
-	@Override
-	public void incompatible() {
-		// TODO Auto-generated method stub
 	}
 	
 }
